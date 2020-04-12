@@ -200,8 +200,10 @@ int main(int argc, char **argv) {
 	}
 	PartitionManager.Output_Partition_Logging();
 
-	if (PartitionManager.Get_Super_Status())
+	if (PartitionManager.Get_Super_Status()) {
 		PartitionManager.Setup_Super_Devices();
+		PartitionManager.Setup_Super_Partition();
+	}
 
 	TWPartition* sys = PartitionManager.Find_Partition_By_Path(PartitionManager.Get_Android_Root_Path());
 	TWPartition* ven = PartitionManager.Find_Partition_By_Path("/vendor");
@@ -211,13 +213,17 @@ int main(int argc, char **argv) {
 		sys->Change_Mount_Read_Only(true);
 		twrpApex apex;
 		apex.loadApexImages();
-
+		property_set("twrp.apex.loaded", "true");
 		if (ven && ven->Get_Super_Status()) {
 			PartitionManager.Prepare_Super_Volume(ven);
 			ven->Change_Mount_Read_Only(true);
 		}
 	}
 
+#ifdef TW_INCLUDE_CRYPTO
+	sleep(10);
+	PartitionManager.Decrypt_Data();
+#endif
 	// Load up all the resources
 	gui_loadResources();
 
@@ -429,7 +435,8 @@ int main(int argc, char **argv) {
 	// Reboot
 	TWFunc::Update_Intent_File(Send_Intent);
 	delete adb_bu_fifo;
-	TWFunc::Update_Log_File();
+	if (!TWFunc::Is_Mount_Wiped("/data"))
+		TWFunc::Update_Log_File();
 	gui_msg(Msg("rebooting=Rebooting..."));
 	string Reboot_Arg;
 	DataManager::GetValue("tw_reboot_arg", Reboot_Arg);
