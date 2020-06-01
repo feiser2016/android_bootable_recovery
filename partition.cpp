@@ -463,13 +463,13 @@ bool TWPartition::Process_Fstab_Line(const char *fstab_line, bool Display_Error,
 			Backup_Name = "system";
 			Backup_Display_Name = Display_Name;
 			Storage_Name = Display_Name;
-#ifdef PRODUCT_USE_DYNAMIC_PARTITIONS
-			Wipe_Available_in_GUI = false;
-			Can_Be_Backed_Up = false;
-#else
-			Wipe_Available_in_GUI = true;
-			Can_Be_Backed_Up = true;
-#endif
+			if (Is_Super) {
+				Wipe_Available_in_GUI = false;
+				Can_Be_Backed_Up = false;
+			} else {
+				Wipe_Available_in_GUI = true;
+				Can_Be_Backed_Up = true;
+			}
 			Mount_Read_Only = true;
 		} else if (Mount_Point == "/data") {
 			Display_Name = "Data";
@@ -526,13 +526,49 @@ bool TWPartition::Process_Fstab_Line(const char *fstab_line, bool Display_Error,
 			Display_Name = "Vendor";
 			Backup_Display_Name = Display_Name;
 			Storage_Name = Display_Name;
-#ifdef PRODUCT_USE_DYNAMIC_PARTITIONS
-			Wipe_Available_in_GUI = false;
-			Can_Be_Backed_Up = false;
-#else
-			Wipe_Available_in_GUI = true;
-			Can_Be_Backed_Up = true;
-#endif
+			if (Is_Super) {
+				Wipe_Available_in_GUI = false;
+				Can_Be_Backed_Up = false;
+			} else {
+				Wipe_Available_in_GUI = true;
+				Can_Be_Backed_Up = true;
+			}
+			Mount_Read_Only = true;
+		} else if (Mount_Point == "/product") {
+			Display_Name = "Product";
+			Backup_Display_Name = Display_Name;
+			Storage_Name = Display_Name;
+			if (Is_Super) {
+				Wipe_Available_in_GUI = false;
+				Can_Be_Backed_Up = false;
+			} else {
+				Wipe_Available_in_GUI = true;
+				Can_Be_Backed_Up = true;
+			}
+			Mount_Read_Only = true;
+		} else if (Mount_Point == "/odm") {
+			Display_Name = "ODM";
+			Backup_Display_Name = Display_Name;
+			Storage_Name = Display_Name;
+			if (Is_Super) {
+				Wipe_Available_in_GUI = false;
+				Can_Be_Backed_Up = false;
+			} else {
+				Wipe_Available_in_GUI = true;
+				Can_Be_Backed_Up = true;
+			}
+			Mount_Read_Only = true;
+		} else if (Mount_Point == "/system_ext") {
+			Display_Name = "System Ext";
+			Backup_Display_Name = Display_Name;
+			Storage_Name = Display_Name;
+			if (Is_Super) {
+				Wipe_Available_in_GUI = false;
+				Can_Be_Backed_Up = false;
+			} else {
+				Wipe_Available_in_GUI = true;
+				Can_Be_Backed_Up = true;
+			}
 			Mount_Read_Only = true;
 		}
 #ifdef TW_EXTERNAL_STORAGE_PATH

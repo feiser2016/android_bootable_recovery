@@ -207,6 +207,9 @@ int main(int argc, char **argv) {
 
 	TWPartition* sys = PartitionManager.Find_Partition_By_Path(PartitionManager.Get_Android_Root_Path());
 	TWPartition* ven = PartitionManager.Find_Partition_By_Path("/vendor");
+	TWPartition* pdt = PartitionManager.Find_Partition_By_Path("/product");
+	TWPartition* odm = PartitionManager.Find_Partition_By_Path("/odm");
+	TWPartition* ext = PartitionManager.Find_Partition_By_Path("/system_ext");
 
 	if (sys && sys->Get_Super_Status()) {
 		PartitionManager.Prepare_Super_Volume(sys);
@@ -216,11 +219,18 @@ int main(int argc, char **argv) {
 			LOGERR("Unable to load apex images from /system/apex.");
 		}
 		property_set("twrp.apex.loaded", "true");
-
-		if (ven && ven->Get_Super_Status()) {
-			PartitionManager.Prepare_Super_Volume(ven);
-			ven->Change_Mount_Read_Only(true);
-		}
+	} else if (ven && ven->Get_Super_Status()) {
+		PartitionManager.Prepare_Super_Volume(ven);
+		ven->Change_Mount_Read_Only(true);
+	} else if (pdt && ven->Get_Super_Status()) {
+		PartitionManager.Prepare_Super_Volume(pdt);
+		pdt->Change_Mount_Read_Only(true);
+	} else if (odm && ven->Get_Super_Status()) {
+		PartitionManager.Prepare_Super_Volume(odm);
+		odm->Change_Mount_Read_Only(true);
+	} else if (ext && ven->Get_Super_Status()) {
+		PartitionManager.Prepare_Super_Volume(ext);
+		ext->Change_Mount_Read_Only(true);
 	}
 
 #ifdef TW_INCLUDE_CRYPTO
@@ -410,6 +420,12 @@ int main(int argc, char **argv) {
 				sys->Change_Mount_Read_Only(false);
 				if (ven)
 					ven->Change_Mount_Read_Only(false);
+				if (pdt)
+					pdt->Change_Mount_Read_Only(false);
+				if (odm)
+					odm->Change_Mount_Read_Only(false);
+				if (ext)
+					ext->Change_Mount_Read_Only(false);
 			}
 		} else if (DataManager::GetIntValue("tw_mount_system_ro") == 1) {
 			// Do nothing, user selected to leave system read only
@@ -417,6 +433,12 @@ int main(int argc, char **argv) {
 			sys->Change_Mount_Read_Only(false);
 			if (ven)
 				ven->Change_Mount_Read_Only(false);
+			if (pdt)
+				pdt->Change_Mount_Read_Only(false);
+			if (odm)
+				odm->Change_Mount_Read_Only(false);
+			if (ext)
+				ext->Change_Mount_Read_Only(false);
 		}
 	}
 #endif
