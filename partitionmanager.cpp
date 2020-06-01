@@ -3307,8 +3307,12 @@ bool TWPartitionManager::Prepare_Super_Volume(TWPartition* twrpPart) {
 
 bool TWPartitionManager::Is_Super_Partition(const char* fstab_line) {
 	bool isSuper = false;
-	if (strncmp(fstab_line, "system", strlen("system")) == 0 || strncmp(fstab_line, "vendor", strlen("vendor")) == 0
-	|| strncmp(fstab_line, "data", strlen("data")) == 0) {
+	if (
+		strncmp(fstab_line, "system", strlen("system")) == 0 || 
+		strncmp(fstab_line, "vendor", strlen("vendor")) == 0 || 
+		strncmp(fstab_line, "product", strlen("product")) == 0 || 
+		strncmp(fstab_line, "odm", strlen("odm")) == 0  || 
+		strncmp(fstab_line, "data", strlen("data")) == 0) {
 		isSuper = true;
 	}
 	DataManager::SetValue(TW_IS_SUPER, "1");
@@ -3337,6 +3341,7 @@ void TWPartitionManager::Setup_Super_Partition() {
 	superPartition->Backup_Display_Name = "Super";
 	superPartition->Current_File_System = "emmc";
 	superPartition->Can_Be_Backed_Up = true;
+	superPartition->Can_Flash_Img = true;
 	superPartition->Is_Present = true;
 	superPartition->Is_SubPartition = false;
 	superPartition->Setup_Image();
