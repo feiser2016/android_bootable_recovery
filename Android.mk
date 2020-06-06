@@ -463,6 +463,7 @@ TWRP_REQUIRED_MODULES += \
     init.recovery.service.rc \
     init.recovery.ldconfig.rc \
     awk \
+    twrpbu
 
 ifneq ($(TW_INCLUDE_CRYPTO),)
 TWRP_REQUIRED_MODULES += \

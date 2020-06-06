@@ -6,6 +6,7 @@ process_file()
     src=$2
 
     if [ ! -e $src ]; then
+      echo $src
       return
     fi
 
